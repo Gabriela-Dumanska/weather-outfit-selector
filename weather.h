@@ -1,22 +1,29 @@
 #ifndef WEATHER_H
 #define WEATHER_H
 
-#include <QString>
-#include <QMap>
+#include <QObject>
 #include <QPixmap>
+#include <QMap>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class Weather; }
-QT_END_NAMESPACE
-
-class Weather {
+class Weather : public QObject
+{
+    Q_OBJECT
 public:
-    Weather();
-
-    QPixmap toIcon(const QString &condition) const;
+    explicit Weather(QObject *parent = nullptr);
+    QPixmap weatherIcon(const QString &conditionCode);
 
 private:
-    QMap<QString, QString> icons;
+    QPixmap loadPixmapFromDisk(const QString &filePath);
+
+    QMap<QString, QString> iconPaths = {
+        {"Sunny", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/sun.png"},
+        {"Clear", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/sun.png"},
+        {"Partly cloudy", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/partialy_cloudy.png"},
+        {"Cloudy", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/cloudy.png"},
+        {"Overcast", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/cloudy.png"},
+        {"Mist", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/cloudy.png"},
+        {"Default", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/rain.png"}
+    };
 };
 
 #endif // WEATHER_H

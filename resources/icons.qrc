@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>sunny.png</file>
+        <file>rainy.png</file>
+	<file>default.png</file>
+        <!-- Dodaj więcej plików ikon, jeśli potrzebujesz -->
+    </qresource>
+</RCC>

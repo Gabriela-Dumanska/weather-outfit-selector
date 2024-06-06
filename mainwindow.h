@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QLabel>
+#include "weather.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,6 +27,8 @@ private:
     Ui::MainWindow *ui;
     QNetworkAccessManager *networkManager;
     QLabel *weatherLabel;
+    QLabel *weatherLabel2;
+    Weather *weather;
 };
 
 #endif // MAINWINDOW_H

@@ -5,11 +5,15 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "weather.h" // Dodaj nagłówek klasy Weather
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , networkManager(new QNetworkAccessManager(this))
+    , weather(new Weather(this)) // Inicjalizacja obiektu klasy Weather
 {
     ui->setupUi(this);
 
@@ -24,7 +28,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete networkManager;
-    delete weatherLabel;  // Zwolnienie pamięci zaalokowanej na QLabel
+    delete weather;
 }
 
 void MainWindow::refreshed()
@@ -56,7 +60,14 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
 
     QString weatherInfo = QString("Current temperature: %1 °C\nWeather: %2").arg(temperature).arg(condition);
 
-    ui->weatherLabel->setText(weatherInfo);
+    // Użyj klasy Weather, aby uzyskać ikonę dla warunku pogodowego
+    QPixmap weatherIcon = weather->weatherIcon(condition);
+    qDebug() << "Weather icon path:" << weatherIcon.cacheKey();
+
+    // Wyświetl ikonę pogody
+    ui->weatherLabel->setPixmap(weatherIcon);
+    ui->weatherLabel2->setText(weatherInfo);
 
     reply->deleteLater();
 }
+
