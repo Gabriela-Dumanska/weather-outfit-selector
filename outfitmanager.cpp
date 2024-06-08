@@ -43,7 +43,7 @@ QString OutfitManager::getOutfitImage(const double &temperature, const QString &
     if (topCoversWholeBody) {
         QStringList filteredOutfitImages;
         for (const QString &image : outfitImages) {
-            if (!image.contains("Dol")) {
+            if (!image.contains("Dol") && !image.contains("Dół")) {
                 filteredOutfitImages.append(image);
             }
         }

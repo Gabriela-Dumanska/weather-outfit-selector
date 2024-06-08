@@ -1,10 +1,12 @@
 #include "mainwindow.h"
+#include "addclothing.h"
 #include "./ui_mainwindow.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pb_refresh, &QPushButton::clicked, this, &MainWindow::refreshed);
     connect(networkManager, &QNetworkAccessManager::finished, this, &MainWindow::onWeatherDataReceived);
+    connect(ui->pb_addclothing, &QPushButton::clicked, this, &MainWindow::showAddClothing);
+
 
     cityMap["Warszawa"] = "Warsaw";
     cityMap["Kraków"] = "Cracow";
@@ -107,4 +111,12 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
     }
 
     reply->deleteLater();
+}
+
+void MainWindow::showAddClothing()
+{
+    AddClothing dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        // Tutaj możesz dodać kod do przetwarzania danych z dialogu
+    }
 }

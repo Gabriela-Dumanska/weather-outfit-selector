@@ -21,6 +21,7 @@ public:
 private slots:
     void refreshed();
     void onWeatherDataReceived(QNetworkReply *reply);
+    void showAddClothing();
 
 private:
     Ui::MainWindow *ui;
