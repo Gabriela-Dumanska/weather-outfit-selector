@@ -19,7 +19,7 @@ QPixmap Weather::weatherIcon(const QString &conditionCode)
 
 QPixmap Weather::loadPixmapFromDisk(const QString &filePath)
 {
-    int size = 200;
+    int size = 150;
     QPixmap pixmap(filePath);
     if (pixmap.isNull()) {
         qDebug() << "Failed to load image from" << filePath;

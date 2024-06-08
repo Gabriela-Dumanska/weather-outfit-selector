@@ -5,15 +5,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "weather.h" // Dodaj nagłówek klasy Weather
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , networkManager(new QNetworkAccessManager(this))
-    , weather(new Weather(this)) // Inicjalizacja obiektu klasy Weather
+    , weather(new Weather(this))
+    , outfitManager(new OutfitManager(this))
 {
     ui->setupUi(this);
 
@@ -29,12 +27,13 @@ MainWindow::~MainWindow()
     delete ui;
     delete networkManager;
     delete weather;
+    delete outfitManager;
 }
 
 void MainWindow::refreshed()
 {
-    const QString apiKey = "b0314acf443a45629a0175154240606";  // Zamień na swój klucz API z WeatherAPI
-    const QString city = "Warsaw";
+    const QString apiKey = "b0314acf443a45629a0175154240606";
+    const QString city = "Cracow";
     const QString urlString = QString("http://api.weatherapi.com/v1/current.json?key=%1&q=%2").arg(apiKey, city);
 
     QUrl url(urlString);
@@ -64,10 +63,19 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
     QPixmap weatherIcon = weather->weatherIcon(condition);
     qDebug() << "Weather icon path:" << weatherIcon.cacheKey();
 
-    // Wyświetl ikonę pogody
     ui->weatherLabel->setPixmap(weatherIcon);
     ui->weatherLabel2->setText(weatherInfo);
 
+    QString style = "Codzienny";
+    QStringList outfitImages = outfitManager->getOutfitImage(4, style).split("\n");
+
+    for (const QString &imagePath : outfitImages) {
+        QLabel *imageLabel = new QLabel();
+        QPixmap pixmap("C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + imagePath);
+        imageLabel->setPixmap(pixmap);
+        qDebug() << "Outfit path:" << "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + imagePath;
+        ui->outfitLayout->addWidget(imageLabel);
+    }
+
     reply->deleteLater();
 }
-

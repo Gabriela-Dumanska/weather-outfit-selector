@@ -3,9 +3,8 @@
 
 #include <QMainWindow>
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QLabel>
 #include "weather.h"
+#include "outfitmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,9 +25,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QNetworkAccessManager *networkManager;
-    QLabel *weatherLabel;
-    QLabel *weatherLabel2;
     Weather *weather;
+    OutfitManager *outfitManager;
 };
 
 #endif // MAINWINDOW_H

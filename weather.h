@@ -16,8 +16,8 @@ private:
     QPixmap loadPixmapFromDisk(const QString &filePath);
 
     QMap<QString, QString> iconPaths = {
-        {"Sunny", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/sun.png"},
-        {"Clear", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/sun.png"},
+        {"Sunny", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/sunny.png"},
+        {"Clear", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/sunny.png"},
         {"Partly cloudy", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/partialy_cloudy.png"},
         {"Cloudy", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/cloudy.png"},
         {"Overcast", "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/icons/cloudy.png"},
