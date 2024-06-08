@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -117,6 +118,6 @@ void MainWindow::showAddClothing()
 {
     AddClothing dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        // Tutaj możesz dodać kod do przetwarzania danych z dialogu
+         QMessageBox::information(this, "Sukces", "Ubranie zostało dodane pomyślnie!");
     }
 }
