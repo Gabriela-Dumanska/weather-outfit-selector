@@ -18,7 +18,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pb_refresh, &QPushButton::clicked, this, &MainWindow::refreshed);
     connect(networkManager, &QNetworkAccessManager::finished, this, &MainWindow::onWeatherDataReceived);
 
-    // Fetch initial weather data
+    cityMap["Warszawa"] = "Warsaw";
+    cityMap["Kraków"] = "Cracow";
+    cityMap["Tarnów"] = "Tarnow";
+    cityMap["Reykjavik"] = "Reykjavik";
+    cityMap["Jakarta"] = "Jakarta";
+
+    QStringList cities = {"Kraków", "Warszawa", "Tarnów", "Reykjavik", "Jakarta"};
+    ui->cityBox->addItems(cities);
+
+    QStringList styles = {"Codzienny", "Elegancki", "Sportowy"};
+    ui->styleBox->addItems(styles);
+
+
     refreshed();
 }
 
@@ -33,8 +45,9 @@ MainWindow::~MainWindow()
 void MainWindow::refreshed()
 {
     const QString apiKey = "b0314acf443a45629a0175154240606";
-    const QString city = "Cracow";
-    const QString urlString = QString("http://api.weatherapi.com/v1/current.json?key=%1&q=%2").arg(apiKey, city);
+    QString selectedCity = ui->cityBox->currentText();
+    QString englishCity = cityMap.value(selectedCity);
+    const QString urlString = QString("http://api.weatherapi.com/v1/current.json?key=%1&q=%2").arg(apiKey, englishCity);
 
     QUrl url(urlString);
     QNetworkRequest request(url);
@@ -49,6 +62,12 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
         return;
     }
 
+    QLayoutItem *child;
+    while ((child = ui->outfitLayout->takeAt(0)) != nullptr) {
+        delete child->widget();
+        delete child;
+    }
+
     QByteArray responseData = reply->readAll();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
     QJsonObject jsonObj = jsonDoc.object();
@@ -56,24 +75,34 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
     QJsonObject current = jsonObj.value("current").toObject();
     double temperature = current.value("temp_c").toDouble();
     QString condition = current.value("condition").toObject().value("text").toString();
+    QString weatherInfo = QString("%1 °C").arg(temperature);
 
-    QString weatherInfo = QString("Current temperature: %1 °C\nWeather: %2").arg(temperature).arg(condition);
-
-    // Użyj klasy Weather, aby uzyskać ikonę dla warunku pogodowego
     QPixmap weatherIcon = weather->weatherIcon(condition);
-    qDebug() << "Weather icon path:" << weatherIcon.cacheKey();
-
     ui->weatherLabel->setPixmap(weatherIcon);
     ui->weatherLabel2->setText(weatherInfo);
 
-    QString style = "Codzienny";
-    QStringList outfitImages = outfitManager->getOutfitImage(4, style).split("\n");
+    QString selectedStyle = ui->styleBox->currentText();
 
-    for (const QString &imagePath : outfitImages) {
+    QStringList outfitImages = outfitManager->getOutfitImage(4, selectedStyle).split("\n");
+
+    QList<QSize> itemSizes;
+    if (outfitImages.size() == 4) {
+        itemSizes = {QSize(200, 200), QSize(200, 200), QSize(100, 200), QSize(200, 200)};
+    } else {
+        itemSizes = {QSize(200, 200), QSize(100, 200), QSize(200, 200)};
+    }
+
+    for (int i = 0; i < outfitImages.size(); ++i) {
         QLabel *imageLabel = new QLabel();
-        QPixmap pixmap("C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + imagePath);
+        QPixmap pixmap("C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + outfitImages[i]);
+
+        imageLabel->setFixedSize(itemSizes[i]);
+
+        pixmap = pixmap.scaled(itemSizes[i], Qt::KeepAspectRatio);
+
+        imageLabel->setScaledContents(true);
+
         imageLabel->setPixmap(pixmap);
-        qDebug() << "Outfit path:" << "C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + imagePath;
         ui->outfitLayout->addWidget(imageLabel);
     }
 

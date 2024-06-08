@@ -31,9 +31,10 @@ QList<Clothes::ClothingItem> Clothes::getClothingItems(const QString &category, 
     if (query.exec()) {
         while (query.next()) {
             ClothingItem item;
-            item.weather_conditions = query.value("weather_conditions").toString();
-            item.style = query.value("style").toString();
             item.image_path = query.value("image_path").toString();
+            if (category == "Tops") {
+                item.whole_body = query.value("whole_body").toString();
+            }
             items.append(item);
         }
     } else {

@@ -27,6 +27,7 @@ private:
     QNetworkAccessManager *networkManager;
     Weather *weather;
     OutfitManager *outfitManager;
+    QMap<QString, QString> cityMap;
 };
 
 #endif // MAINWINDOW_H

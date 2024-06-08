@@ -15,9 +15,8 @@ public:
     ~Clothes();
 
     struct ClothingItem {
-        QString weather_conditions;
-        QString style;
         QString image_path;
+        QString whole_body;
     };
 
     QList<ClothingItem> getClothingItems(const QString &category, const QString &weatherCondition, const QString &style);

@@ -25,13 +25,29 @@ QString OutfitManager::getOutfitImage(const double &temperature, const QString &
 
     QStringList categories = {"Hats", "Tops", "Bottoms", "Shoes"};
     QStringList outfitImages;
+    bool topCoversWholeBody = false;
 
     for (const QString &category : categories) {
         QList<Clothes::ClothingItem> items = clothes->getClothingItems(category, weatherCondition, style);
+
         if (!items.isEmpty()) {
             int randomIndex = QRandomGenerator::global()->bounded(items.size());
             outfitImages.append(items[randomIndex].image_path);
+
+            if (category == "Tops" && items[randomIndex].whole_body == "True") {
+                topCoversWholeBody = true;
+            }
         }
+    }
+
+    if (topCoversWholeBody) {
+        QStringList filteredOutfitImages;
+        for (const QString &image : outfitImages) {
+            if (!image.contains("Dol")) {
+                filteredOutfitImages.append(image);
+            }
+        }
+        outfitImages = filteredOutfitImages;
     }
 
     return outfitImages.join("\n");
