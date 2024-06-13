@@ -1,4 +1,5 @@
 #include "outfitmanager.h"
+#include "qsize.h"
 #include <QList>
 #include <QRandomGenerator>
 
@@ -24,31 +25,50 @@ QString OutfitManager::getOutfitImage(const double &temperature, const QString &
     QString weatherCondition = classifyTemperature(temperature);
 
     QStringList categories = {"Hats", "Tops", "Bottoms", "Shoes"};
-    QStringList outfitImages;
+    QStringList outfitData;
     bool topCoversWholeBody = false;
 
     for (const QString &category : categories) {
         QList<Clothes::ClothingItem> items = clothes->getClothingItems(category, weatherCondition, style);
-
         if (!items.isEmpty()) {
             int randomIndex = QRandomGenerator::global()->bounded(items.size());
-            outfitImages.append(items[randomIndex].image_path);
+            QString imagePath = items[randomIndex].image_path;
 
-            if (category == "Tops" && items[randomIndex].whole_body == "True") {
-                topCoversWholeBody = true;
+            QSize itemSize;
+            if (category == "Hats") {
+                itemSize = QSize(200, 200);
+            } else if (category == "Tops") {
+                if (items[randomIndex].whole_body == "True") {
+                    topCoversWholeBody = true;
+                    itemSize = QSize(100, 200);
+                } else {
+                    itemSize = QSize(200, 200);
+                }
+            } else if (category == "Bottoms") {
+                itemSize = QSize(100, 200);
+            } else if (category == "Shoes") {
+                itemSize = QSize(200, 200);
+            }
+
+            if (imagePath == "clothes_images/filler") {
+                continue;
+            } else {
+                outfitData.append(QString("%1;%2x%3").arg(imagePath).arg(itemSize.width()).arg(itemSize.height()));
             }
         }
     }
 
     if (topCoversWholeBody) {
-        QStringList filteredOutfitImages;
-        for (const QString &image : outfitImages) {
-            if (!image.contains("Dol") && !image.contains("Dół")) {
-                filteredOutfitImages.append(image);
+        QStringList filteredOutfitData;
+        for (const QString &data : outfitData) {
+            QStringList parts = data.split(';');
+            QString imagePath = parts[0];
+            if (!imagePath.contains("Dol") && !imagePath.contains("Dół")) {
+                filteredOutfitData.append(data);
             }
         }
-        outfitImages = filteredOutfitImages;
+        outfitData = filteredOutfitData;
     }
 
-    return outfitImages.join("\n");
+    return outfitData.join("\n");
 }

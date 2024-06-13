@@ -88,25 +88,20 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
 
     QString selectedStyle = ui->styleBox->currentText();
 
-    QStringList outfitImages = outfitManager->getOutfitImage(4, selectedStyle).split("\n");
+    QStringList outfitDataList = outfitManager->getOutfitImage(20, selectedStyle).split("\n");
 
-    QList<QSize> itemSizes;
-    if (outfitImages.size() == 4) {
-        itemSizes = {QSize(200, 200), QSize(200, 200), QSize(100, 200), QSize(200, 200)};
-    } else {
-        itemSizes = {QSize(200, 200), QSize(100, 200), QSize(200, 200)};
-    }
+    for (const QString &data : outfitDataList) {
+        QStringList parts = data.split(';');
+        QString imagePath = parts[0];
+        QStringList sizeParts = parts[1].split('x');
+        QSize itemSize(sizeParts[0].toInt(), sizeParts[1].toInt());
 
-    for (int i = 0; i < outfitImages.size(); ++i) {
         QLabel *imageLabel = new QLabel();
-        QPixmap pixmap("C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + outfitImages[i]);
+        QPixmap pixmap("C:/Users/gabul/Documents/Programowanie/Cpp/SkyStyle/resources/" + imagePath);
 
-        imageLabel->setFixedSize(itemSizes[i]);
-
-        pixmap = pixmap.scaled(itemSizes[i], Qt::KeepAspectRatio);
-
+        imageLabel->setFixedSize(itemSize);
+        pixmap = pixmap.scaled(itemSize, Qt::KeepAspectRatio);
         imageLabel->setScaledContents(true);
-
         imageLabel->setPixmap(pixmap);
         ui->outfitLayout->addWidget(imageLabel);
     }

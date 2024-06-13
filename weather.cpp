@@ -12,7 +12,6 @@ QPixmap Weather::weatherIcon(const QString &conditionCode)
     if (iconPaths.contains(conditionCode)) {
         return loadPixmapFromDisk(iconPaths.value(conditionCode));
     } else {
-        qDebug() << "Unknown weather condition code:" << conditionCode;
         return loadPixmapFromDisk(iconPaths.value("Default"));
     }
 }
