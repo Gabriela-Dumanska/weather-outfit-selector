@@ -22,7 +22,12 @@ Clothes::~Clothes() {
 
 QList<Clothes::ClothingItem> Clothes::getClothingItems(const QString &category, const QString &weatherCondition, const QString &style) {
     QList<ClothingItem> items;
-    QString queryStr = QString("SELECT weather_conditions, style, image_path FROM %1 WHERE weather_conditions LIKE :weather AND style LIKE :style").arg(category);
+    QString queryStr;
+    if (category == "Tops") {
+        queryStr = QString("SELECT weather_conditions, style, image_path, whole_body FROM %1 WHERE weather_conditions LIKE :weather AND style LIKE :style").arg(category);
+    } else {
+        queryStr = QString("SELECT weather_conditions, style, image_path FROM %1 WHERE weather_conditions LIKE :weather AND style LIKE :style").arg(category);
+    }
     QSqlQuery query;
     query.prepare(queryStr);
     query.bindValue(":weather", "%" + weatherCondition + "%");

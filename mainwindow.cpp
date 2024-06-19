@@ -88,7 +88,7 @@ void MainWindow::onWeatherDataReceived(QNetworkReply *reply)
 
     QString selectedStyle = ui->styleBox->currentText();
 
-    QStringList outfitDataList = outfitManager->getOutfitImage(20, selectedStyle).split("\n");
+    QStringList outfitDataList = outfitManager->getOutfitImage(temperature, selectedStyle).split("\n");
 
     for (const QString &data : outfitDataList) {
         QStringList parts = data.split(';');

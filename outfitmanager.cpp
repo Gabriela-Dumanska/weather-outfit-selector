@@ -2,6 +2,7 @@
 #include "qsize.h"
 #include <QList>
 #include <QRandomGenerator>
+#include <QDebug>
 
 OutfitManager::OutfitManager(QObject *parent) : QObject(parent), clothes(new Clothes(this)) {}
 
@@ -38,7 +39,7 @@ QString OutfitManager::getOutfitImage(const double &temperature, const QString &
             if (category == "Hats") {
                 itemSize = QSize(200, 200);
             } else if (category == "Tops") {
-                if (items[randomIndex].whole_body == "True") {
+                if (items[randomIndex].whole_body == "1") {
                     topCoversWholeBody = true;
                     itemSize = QSize(100, 200);
                 } else {
@@ -63,7 +64,7 @@ QString OutfitManager::getOutfitImage(const double &temperature, const QString &
         for (const QString &data : outfitData) {
             QStringList parts = data.split(';');
             QString imagePath = parts[0];
-            if (!imagePath.contains("Dol") && !imagePath.contains("Dół")) {
+            if (!imagePath.contains("Dol") && !imagePath.contains("Dół") && !imagePath.contains("Jeansy")) {
                 filteredOutfitData.append(data);
             }
         }
